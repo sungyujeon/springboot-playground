@@ -9,7 +9,9 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
@@ -33,9 +35,11 @@ public class CustomSpringbootApplication {
     private static class CustomHttpServlet extends HttpServlet {
         @Override
         protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            String name = req.getParameter("name");
+
             resp.setStatus(HttpStatus.OK.value());
-            resp.setHeader("Content-Type", "text/plain");
-            resp.getWriter().println("Hello Servlet");
+            resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+            resp.getWriter().println("Hello " + name);
         }
     }
 }
