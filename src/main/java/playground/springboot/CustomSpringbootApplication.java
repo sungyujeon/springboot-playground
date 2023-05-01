@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import playground.springboot.controller.HelloController;
 
 import java.io.IOException;
 
@@ -34,15 +35,20 @@ public class CustomSpringbootApplication {
     }
 
     private static class CustomHttpServlet extends HttpServlet {
+
+        private final HelloController helloController = new HelloController();
+
         @Override
         protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             // 인증, 보안, 다국어, 공통 기능 등
-            if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
+            if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {  // binding
                 String name = req.getParameter("name");
+
+                String ret = helloController.hello(name);  // HelloController에 처리를 위임(mapping)
 
                 resp.setStatus(HttpStatus.OK.value());
                 resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-                resp.getWriter().println("Hello " + name);
+                resp.getWriter().println(ret);
             } else if (req.getRequestURI().equals("/user")){
                 // user request...
             } else {
